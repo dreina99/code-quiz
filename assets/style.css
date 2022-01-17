@@ -25,6 +25,15 @@
     background-color: lightseagreen;
 }
 
+.choices {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .noBullet {
     list-style-type: none;
+}
+
+.hide {
+    display: none;
 }
