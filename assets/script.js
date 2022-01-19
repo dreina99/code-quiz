@@ -2,6 +2,10 @@ var startButtonEl = document.querySelector("#start-button");
 var questionsDivEl = document.querySelector("#questions");
 var questionHeader = document.querySelector("#question-title");
 var answersList = document.querySelector("#choices");
+var timerEl = document.querySelector("#timer");
+var timeNumberEl = document.querySelector("#time-number");
+var endDivEl = document.querySelector("#end-screen");
+
 const Q1 = {
     questionTitle : "Commonly used datatypes do NOT include:", 
     a1 : {answer : "1. strings", right : false},
@@ -26,14 +30,18 @@ const Q3 = {
 
 const questions = [Q1, Q2, Q3];
 let currentIndex;
+let time = 60;
 
 var initQuiz = function() {
     console.log("clicked");
     var startContent = document.querySelector("#start-screen");
     startContent.classList.add("hide");
+    //console.log(timeNumberEl.textContent);
+    setTimer;
     currentIndex = 0;
     questionsDivEl.classList.remove("hide");   
-    showQuestion(questions[currentIndex]);
+    timerEl.classList.remove("hide");
+    showQuestion(questions[currentIndex]);   
 }
 
 function showQuestion(question) {
@@ -55,80 +63,40 @@ function showQuestion(question) {
     button4.innerHTML = question.a4.answer;
     button4.setAttribute("isCorrect", question.a4.right);
 
-    answersList.addEventListener("click", displayCorrectness)
+    answersList.addEventListener("click", displayNext)
 }
 
-function displayCorrectness(event)
+function displayNext(event)
 {
     console.log(event.target.textContent);
     console.log(event.target.getAttribute("isCorrect"));
+    var isCorrectEl = event.target.getAttribute("isCorrect");
+    if(isCorrectEl === "false")
+    {
+        time -= 10;
+        setTimer;
+    }
     currentIndex++;
-    showQuestion(questions[currentIndex]);
+    if(currentIndex !== questions.length)
+    {
+        showQuestion(questions[currentIndex]);
+    }
+    else
+    {
+        console.log("done");
+    }   
 }
 
+var setTimer = setInterval(function () {
+    timeNumberEl.innerHTML = time;
+    time--;
+    if(time <= 0)
+    {
+        clearInterval(setTimer);
+        questionsDivEl.classList.add("hide");
+        endDivEl.classList.remove("hide");
+        timerEl.classList.add("hide");
+    }
+}, 1000);
+
 startButtonEl.addEventListener("click", initQuiz);
-
-
-
-/*
-var displayQuestion = function(question)
-{
-    var questionHeader = document.querySelector("#question-title");
-    questionHeader.textContent = question.questionTitle;
-
-    var answersDivEl = document.querySelector("#choices");
-    var answersList = document.createElement("ul");
-    answersDivEl.appendChild(answersList);
-
-    // create first answer choice for question 1 
-    var listItemEl = document.createElement("li");
-    listItemEl.className = "noBullet";
-    // append to list of answers
-    answersList.appendChild(listItemEl);
-    // create and append button for first choice
-    var a1Button = document.createElement("button");
-    a1Button.textContent = question.a1.answer;
-    a1Button.setAttribute("isRight", question.a1.right);
-    listItemEl.appendChild(a1Button);
-
-    // create second answer choice for question 1
-    var listItemEl2 = document.createElement("li");
-    listItemEl2.className = "noBullet";
-    // append to list of answers
-    answersList.appendChild(listItemEl2);
-    // create and append button for first choice
-    var a2Button = document.createElement("button");
-    a2Button.textContent = question.a2.answer;
-    a2Button.setAttribute("isRight", question.a2.right);
-    listItemEl2.appendChild(a2Button);
-
-    // create third answer choice for question 1
-    var listItemEl3 = document.createElement("li");
-    listItemEl3.className = "noBullet";
-    // append to list of answers
-    answersList.appendChild(listItemEl3);
-    // create and append button for third choice
-    var a3Button = document.createElement("button");
-    a3Button.textContent = question.a3.answer;
-    a3Button.setAttribute("isRight", question.a3.right);
-    listItemEl3.appendChild(a3Button);
-
-    // create fourth answer choice for question 1
-    var listItemEl4 = document.createElement("li");
-    listItemEl4.className = "noBullet";
-    // append to list of answers
-    answersList.appendChild(listItemEl4);
-    // create and append button for third choice
-    var a4Button = document.createElement("button");
-    a4Button.textContent = question.a4.answer;
-    a4Button.setAttribute("isRight", question.a4.right);
-    listItemEl4.appendChild(a4Button);
-
-    answersList.addEventListener("click",function(event) {
-        console.log(event.target.textContent);
-        console.log(event.target);
-        console.log(event.target.getAttribute("isRight"));   
-    });
-
-    return answersList;
-} */

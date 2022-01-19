@@ -12,7 +12,7 @@
     font-style: bold;
 }
 
-.start button {
+.btn {
     color: white;
     border-radius: 5px;
     background-color: teal;
@@ -21,19 +21,29 @@
     font-size: 16px;
 }
 
-.start button:hover {
+.btn:hover {
     background-color: lightseagreen;
 }
 
 .choices {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.noBullet {
-    list-style-type: none;
+    text-align: center;
 }
 
 .hide {
     display: none;
+}
+
+.questions {
+    text-align: center;
+    margin-top: 150px;
+}
+
+.timer {
+    position: absolute;
+    right: 10px;
+    top: -10px;
+}
+
+.end {
+    text-align: center;
 }
