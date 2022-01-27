@@ -11,11 +11,12 @@ var highScoresDiv = document.querySelector("#high-scores");
 var scoresButton = document.querySelector("#scores-button");
 let score = 0;
 
-var name_score = {
+var user_info = {
     name : "",
     score : 0
 };
-var names_scores = [];
+// array of user names and scores
+var name_scores = [];
 
 const Q1 = {
     questionTitle : "Commonly used datatypes do NOT include:", 
@@ -61,11 +62,14 @@ let time = 60;
 let viewHighScoresClicked = false;
 
 function initQuiz() {
+    // remove start screen
     var startContent = document.querySelector("#start-screen");
     startContent.classList.add("hide");
+    // timer countdown
     var setTimer = setInterval(function () {
         timeNumberEl.innerHTML = time;
         time--;
+        // if at end of questions array, stop timer and call endQuiz
         if(currentIndex == questions.length)
         {   
             // time++ used to balance out of sync timer since it takes a second to switch pages
@@ -73,24 +77,29 @@ function initQuiz() {
             clearInterval(setTimer);
             endQuiz();
         }
+        // if user runs out of time, stop timer and call endQuiz
         else if(time <= 0)
         {
             clearInterval(setTimer);
             endQuiz();
         }
+        // if the user clicks the view high scores button, stop the timer
         else if(viewHighScoresClicked === true)
         {
             clearInterval(setTimer);
         }
     }, 1000);
     currentIndex = 0;
-    questionsDivEl.classList.remove("hide");   
+    questionsDivEl.classList.remove("hide"); 
+    // load first question  
     showQuestion(questions[currentIndex]);   
 }
 
 function showQuestion(question) {
+    // set question title
     questionHeader.innerHTML = question.questionTitle;
 
+    // create button for each answer option
     var button1 = document.querySelector("#btn1");
     button1.innerHTML = question.a1.answer;
     button1.setAttribute("isCorrect", question.a1.right);
@@ -107,13 +116,16 @@ function showQuestion(question) {
     button4.innerHTML = question.a4.answer;
     button4.setAttribute("isCorrect", question.a4.right);
 
+    // add an event listener on the list of buttons
     answersList.addEventListener("click", showAnswer)
 }
 
 function showAnswer(event)
 {
     var eventEl = event;
+    // find out if button user clicked was the right answer
     var isCorrectEl = event.target.getAttribute("isCorrect");
+    // if wrong set button color to red, if correct set color to green
     if(isCorrectEl == "false")
     {
         event.target.classList.add("btn-red");
@@ -123,24 +135,28 @@ function showAnswer(event)
         event.target.classList.add("btn-green");
         score++;
     }
+    // call displayNext function after 1 second
     setTimeout(function(){displayNext(eventEl)}, 1000);
 }
 
 function displayNext(event)
 { 
-    console.log(event.target.textContent);
-    console.log(event.target.getAttribute("isCorrect"));
+    // find out if button user clicked was the right answer
     var isCorrectEl = event.target.getAttribute("isCorrect");
+    // if wrong, subtract time from clock and remove red color
     if(isCorrectEl === "false")
     {
         time -= 10;
         event.target.classList.remove("btn-red");
     }
+    // if true, remove green color
     else if(isCorrectEl === "true")
     {
         event.target.classList.remove("btn-green");
     }
+    // increment to the next question
     currentIndex++;
+    // if you are not at the end of questions list, display next question
     if(currentIndex !== questions.length)
     {
         showQuestion(questions[currentIndex]);
@@ -151,40 +167,91 @@ function endQuiz() {
     questionsDivEl.classList.add("hide");
     //timerEl.classList.add("hide");
 
+    // set display message score and time to user's score and remaining time
     var scoreEl = document.querySelector("#score");
     scoreEl.innerHTML = score;
     var timeRemEl = document.querySelector("#time-left")
     timeRemEl.innerHTML = time;
 
+    // calculate final score
     score = score * 10 + time;
 
+    // displat final score
     var finalScoreEl = document.querySelector("#final-score");
     finalScoreEl.innerHTML = score;
+    // show ending screen
     endDivEl.classList.remove("hide");
 
+    // on submite button click, show high scores page
     submitButtonEl = document.querySelector("#score-submit");
     submitButtonEl.addEventListener("click", showScores);
+}
+
+// get saved scores from local storage and put into name_scores array
+function loadScores() {
+    var saved_scores = localStorage.getItem("name_scores");
+    if(saved_scores === null)
+    {
+        return false;
+    }
+    name_scores = JSON.parse(saved_scores);
+}
+
+// push user data into name_scores and sort
+function getUserData() {
+    // get  initials from end form
+    var initials = document.querySelector("#initials").value;
+
+    // set current players info in user info
+    user_info.name = initials;
+    user_info.score = score;
+   
+    // push new user into name_scores array
+    name_scores.push(user_info);
+    // sort name_scores array in descending order based on score
+    name_scores.sort((a, b) => (a.score <= b.score) ? 1 : -1);  
+}
+
+// save sorted name_scores in local storage
+function saveScores() {
+    localStorage.setItem("name_scores", JSON.stringify(name_scores));
+}
+
+// display name_scores array on high scores page
+function displayScores() {
+    var scoresList = document.querySelector("#high-scores-list");
+    for(var i = 0; i < name_scores.length; i++)
+    {
+        var listItemEl = document.createElement("li");
+        listItemEl.innerHTML = name_scores[i].name + " " + name_scores[i].score;
+        scoresList.appendChild(listItemEl);
+    }
+
+    endDivEl.classList.add("hide");
+    highScoresDiv.classList.remove("hide");
+}
+
+// remove name_scores array from high scores page
+function removeScores() {
+    var scoresList = document.querySelector("#high-scores-list");
+    scoresList.innerHTML = "";
+}
+
+// clear local storage and remove scores from high scores page
+function clearScores() {
+    localStorage.clear();
+    removeScores();
 }
 
 var showScores = function(event) {
     event.preventDefault();
 
-    initials = document.querySelector("#initials").value;
-    
-    endDivEl.classList.add("hide");
-    highScoresDiv.classList.remove("hide")
+    loadScores();
+    getUserData();
+    saveScores();
+    displayScores();
 
-    var scoresList = document.querySelector("#high-scores-list")
-    var listItemEl = document.createElement("li");
-    listItemEl.innerHTML = initials + " " + score;
-    scoresList.appendChild(listItemEl);
-
-    name_score.name = initials;
-    name_score.score = score;
-    names_scores.push(name_score);
-
-    localStorage.setItem("name_scores", JSON.stringify(names_scores));
-
+    // back button to restart quiz
     goBackButton = document.querySelector("#go-back");
     goBackButton.addEventListener("click", function() {
         highScoresDiv.classList.add("hide");
@@ -194,19 +261,35 @@ var showScores = function(event) {
         timeNumberEl.innerHTML = time;
         timerEl.classList.remove("hide");
         scoresButton.classList.remove("hide");
+        // call remove scores so the page will not have duplicate scores with every load
+        removeScores();
+    });
+
+    // clear button to clear scores
+    clearButton = document.querySelector("#clear-scores");
+    clearButton.addEventListener("click", function() {
+        clearScores();
     });
 }
 
+// display high scores page when user clicks view high scores button
 scoresButton.addEventListener("click", function() {
+    // remove any content from page
     startScreen.classList.add("hide");
     questionsDivEl.classList.add("hide");
     endDivEl.classList.add("hide");
     timerEl.classList.add("hide");
     scoresButton.classList.add("hide");
-    highScoresDiv.classList.remove("hide");    
-
+    // show high scores page
+    highScoresDiv.classList.remove("hide");  
+    
+    // get data from storage and display
+    loadScores();
+    displayScores();
+    // stop timer
     viewHighScoresClicked = true;
 
+    // go back to home page
     goBackButton = document.querySelector("#go-back");
     goBackButton.addEventListener("click", function() {
         highScoresDiv.classList.add("hide");
@@ -216,10 +299,18 @@ scoresButton.addEventListener("click", function() {
         timeNumberEl.innerHTML = time;
         timerEl.classList.remove("hide");
         scoresButton.classList.remove("hide");
+        // call remove scores so the page will not have duplicate scores with every load
+        removeScores();
     });
 
+    // clear button to clear scores
+    clearButton = document.querySelector("#clear-scores");
+    clearButton.addEventListener("click", function() {
+        clearScores();
+    });
 });
 
+// start quiz
 startButtonEl.addEventListener("click", function() {
     initQuiz();
 });
