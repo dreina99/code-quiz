@@ -48,25 +48,28 @@
     margin-top: 150px;
 }
 
-.scores-link a {
-    position: absolute;
-    top: 5px;
-    left: 8px;
-    text-decoration: none;
-    color: teal;
-}
-
-.scores-link a:hover {
-    color: lightseagreen;
-}
-
 .timer {
     position: absolute;
-    right: 10px;
+    right: 12px;
     top: -10px;
 }
 
 .end {
     text-align: center;
     margin: 50px;
+}
+
+.scores-button {
+    background: none;
+    border: none;
+    color: teal;
+    cursor: pointer;
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    font-size: 16px;
+}
+
+.scores-button:hover {
+    color: lightseagreen;
 }

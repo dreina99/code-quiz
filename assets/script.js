@@ -7,8 +7,15 @@ var displayCorrectEl = document.querySelector("#display-correct")
 var timerEl = document.querySelector("#timer");
 var timeNumberEl = document.querySelector("#time-number");
 var endDivEl = document.querySelector("#end-screen");
-var highScoresDiv = document.querySelector("#high-scores")
+var highScoresDiv = document.querySelector("#high-scores");
+var scoresButton = document.querySelector("#scores-button");
 let score = 0;
+
+var name_score = {
+    name : "",
+    score : 0
+};
+var names_scores = [];
 
 const Q1 = {
     questionTitle : "Commonly used datatypes do NOT include:", 
@@ -32,9 +39,26 @@ const Q3 = {
     a4 : {answer : "4. all of the above", right : true}
 };
 
-const questions = [Q1, Q2, Q3];
+const Q4 = {
+    questionTitle : "String values must be enclosed in __________ when being assigned to variables.",
+    a1 : {answer : "1. commas", right : false},
+    a2 : {answer : "2. curly brackets", right : false},
+    a3 : {answer : "3. quotes", right : true},
+    a4 : {answer : "4. parentheses", right : false}
+};
+
+const Q5 = {
+    questionTitle : "A useful tool during development for printing content to the debugger is:",
+    a1 : {answer : "1. JavaScript", right : false},
+    a2 : {answer : "2. terminal/bash", right : false},
+    a3 : {answer : "3. for loops", right : false},
+    a4 : {answer : "4. console.log", right : true}
+};
+
+const questions = [Q1, Q2, Q3, Q4, Q5];
 let currentIndex;
 let time = 60;
+let viewHighScoresClicked = false;
 
 function initQuiz() {
     var startContent = document.querySelector("#start-screen");
@@ -53,6 +77,10 @@ function initQuiz() {
         {
             clearInterval(setTimer);
             endQuiz();
+        }
+        else if(viewHighScoresClicked === true)
+        {
+            clearInterval(setTimer);
         }
     }, 1000);
     currentIndex = 0;
@@ -151,6 +179,12 @@ var showScores = function(event) {
     listItemEl.innerHTML = initials + " " + score;
     scoresList.appendChild(listItemEl);
 
+    name_score.name = initials;
+    name_score.score = score;
+    names_scores.push(name_score);
+
+    localStorage.setItem("name_scores", JSON.stringify(names_scores));
+
     goBackButton = document.querySelector("#go-back");
     goBackButton.addEventListener("click", function() {
         highScoresDiv.classList.add("hide");
@@ -158,8 +192,33 @@ var showScores = function(event) {
         time = 60;
         score = 0;
         timeNumberEl.innerHTML = time;
+        timerEl.classList.remove("hide");
+        scoresButton.classList.remove("hide");
     });
 }
+
+scoresButton.addEventListener("click", function() {
+    startScreen.classList.add("hide");
+    questionsDivEl.classList.add("hide");
+    endDivEl.classList.add("hide");
+    timerEl.classList.add("hide");
+    scoresButton.classList.add("hide");
+    highScoresDiv.classList.remove("hide");    
+
+    viewHighScoresClicked = true;
+
+    goBackButton = document.querySelector("#go-back");
+    goBackButton.addEventListener("click", function() {
+        highScoresDiv.classList.add("hide");
+        startScreen.classList.remove("hide");
+        time = 60;
+        score = 0;
+        timeNumberEl.innerHTML = time;
+        timerEl.classList.remove("hide");
+        scoresButton.classList.remove("hide");
+    });
+
+});
 
 startButtonEl.addEventListener("click", function() {
     initQuiz();
