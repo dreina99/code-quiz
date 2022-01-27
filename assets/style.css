@@ -46,6 +46,18 @@
     margin-top: 150px;
 }
 
+.scores-link a {
+    position: absolute;
+    top: 5px;
+    left: 8px;
+    text-decoration: none;
+    color: teal;
+}
+
+.scores-link a:hover {
+    color: lightseagreen;
+}
+
 .timer {
     position: absolute;
     right: 10px;

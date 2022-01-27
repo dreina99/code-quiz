@@ -142,8 +142,11 @@ function endQuiz() {
 
 var showScores = function(event) {
     event.preventDefault();
+    
     initials = document.querySelector("#initials").value;
     console.log(initials);
+    var scoresList = document.querySelector("#scores-list");
+    var listItemEl = document.createElement("li");
 }
 
 startButtonEl.addEventListener("click", initQuiz);
