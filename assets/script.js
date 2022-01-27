@@ -63,6 +63,7 @@ let viewHighScoresClicked = false;
 
 function initQuiz() {
     // remove start screen
+    viewHighScoresClicked = false;
     var startContent = document.querySelector("#start-screen");
     startContent.classList.add("hide");
     // timer countdown
@@ -103,18 +104,22 @@ function showQuestion(question) {
     var button1 = document.querySelector("#btn1");
     button1.innerHTML = question.a1.answer;
     button1.setAttribute("isCorrect", question.a1.right);
+    button1.classList.remove("btn-red", "btn-green");
 
     var button2 = document.querySelector("#btn2");
     button2.innerHTML = question.a2.answer;
     button2.setAttribute("isCorrect", question.a2.right);
+    button2.classList.remove("btn-red", "btn-green");
 
     var button3 = document.querySelector("#btn3");
     button3.innerHTML = question.a3.answer;
     button3.setAttribute("isCorrect", question.a3.right);
+    button3.classList.remove("btn-red", "btn-green");
 
     var button4 = document.querySelector("#btn4");
     button4.innerHTML = question.a4.answer;
     button4.setAttribute("isCorrect", question.a4.right);
+    button4.classList.remove("btn-red", "btn-green");
 
     // add an event listener on the list of buttons
     answersList.addEventListener("click", showAnswer)
@@ -136,7 +141,7 @@ function showAnswer(event)
         score++;
     }
     // call displayNext function after 1 second
-    setTimeout(function(){displayNext(eventEl)}, 1000);
+    setTimeout(function(){displayNext(eventEl)}, 500);
 }
 
 function displayNext(event)
@@ -223,7 +228,8 @@ function displayScores() {
     for(var i = 0; i < name_scores.length; i++)
     {
         var listItemEl = document.createElement("li");
-        listItemEl.innerHTML = name_scores[i].name + " " + name_scores[i].score;
+        listItemEl.classList.add("scores-li");
+        listItemEl.innerHTML = name_scores[i].name + " - " + name_scores[i].score;
         scoresList.appendChild(listItemEl);
     }
 
@@ -239,6 +245,7 @@ function removeScores() {
 
 // clear local storage and remove scores from high scores page
 function clearScores() {
+    name_scores = [];
     localStorage.clear();
     removeScores();
 }
@@ -250,6 +257,12 @@ var showScores = function(event) {
     getUserData();
     saveScores();
     displayScores();
+
+    timerEl.classList.add("hide");
+    scoresButton.classList.add("hide");
+
+    var form = document.querySelector("#submit-form");
+    form.reset();
 
     // back button to restart quiz
     goBackButton = document.querySelector("#go-back");

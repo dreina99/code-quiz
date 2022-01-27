@@ -46,15 +46,15 @@
             <p>Score is equal to number of questions correct times 10 plus time remaining</p>
             <p>Number of correct answers <span id = "score"></span>. Time remaining <span id = "time-left"></span>.</p>
             <p id = "display-score">Your final score is <span id = "final-score"></span>.</p> 
-            <form>
+            <form id = "submit-form">
                 <label>Enter your initials:</label>
                 <input id = "initials" type = "text" name = "name">
-                <button id = "score-submit" class = "btn">Submit</button>
+                <button id = "score-submit" class = "btn submit-btn">Submit</button>
             </form>
         </div>
 
         <div id = "high-scores" class = "high-scores hide">
-            <h2 class = "high-scores" id = "high-scores">High Scores</h2> 
+            <h2 class = "high-scores-header" id = "high-scores-header">High Scores</h2> 
             <ul class = "high-scores-list" id = "high-scores-list"></ul>
             <button id = "go-back" class = "btn">Go Back</button>
             <button id = "clear-scores" class = "btn">Clear Saved Scores</button>

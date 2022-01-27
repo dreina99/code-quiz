@@ -73,3 +73,37 @@
 .scores-button:hover {
     color: lightseagreen;
 }
+
+.submit-btn {
+    padding: 8px;    
+}
+
+input {
+    padding: 8px;
+}
+
+label {
+    font-size: 17px;
+}
+
+.high-scores {
+    position: relative;
+    left: 34%;
+    margin: 0 auto;
+    margin-top: 100px;
+    
+}
+
+.high-scores-list {
+    padding-left: 4px;
+}
+
+.scores-li {
+    width: 33%;
+    padding: 5px;
+    list-style-type: none;
+    background-color: rgba(32,178,170,0.4)    
+}
+
+
+
