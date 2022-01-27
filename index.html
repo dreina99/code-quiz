@@ -20,7 +20,7 @@
             <button id = "start-button" class = "btn">Start Quiz</button>
         </div>
 
-        <div id = "timer" class = "hide timer">
+        <div id = "timer" class = "timer">
             <p>Timer: <span id = "time-number">60</span></p> 
         </div>
 
@@ -32,10 +32,21 @@
                 <button class = "btn" id = "btn3">Button 3</button>
                 <button class = "btn" id = "btn4">Button 4</button>
             </div>
+            <div id = "display-correct" class = "hide">
+
+            </div>
         </div>
 
         <div id = "end-screen" class = "end hide">
-            <h2>End Quiz</h2>
+            <h2>All Done</h2>
+            <p>Score is equal to number of questions correct times 10 plus time remaining</p>
+            <p>Number of correct answers <span id = "score"></span>. Time remaining <span id = "time-left"></span>.</p>
+            <p id = "display-score">Your final score is <span id = "final-score"></span>.</p> 
+            <form>
+                <label>Enter your initials:</label>
+                <input id = "initials" type = "text" name = "name">
+                <button id = "score-submit" type = "submit" class = "btn">Submit</button>
+            </form>
         </div>
     </div>
     <script src = "./assets/script.js"></script>

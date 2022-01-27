@@ -2,9 +2,11 @@ var startButtonEl = document.querySelector("#start-button");
 var questionsDivEl = document.querySelector("#questions");
 var questionHeader = document.querySelector("#question-title");
 var answersList = document.querySelector("#choices");
+var displayCorrectEl = document.querySelector("#display-correct")
 var timerEl = document.querySelector("#timer");
 var timeNumberEl = document.querySelector("#time-number");
 var endDivEl = document.querySelector("#end-screen");
+let score = 0;
 
 const Q1 = {
     questionTitle : "Commonly used datatypes do NOT include:", 
@@ -33,14 +35,26 @@ let currentIndex;
 let time = 60;
 
 var initQuiz = function() {
-    console.log("clicked");
     var startContent = document.querySelector("#start-screen");
     startContent.classList.add("hide");
-    //console.log(timeNumberEl.textContent);
-    setTimer;
+    var setTimer = setInterval(function () {
+        timeNumberEl.innerHTML = time;
+        time--;
+        if(currentIndex == questions.length)
+        {   
+            // time++ used to balance out of sync timer since it takes a second to switch pages
+            time++;
+            clearInterval(setTimer);
+            endQuiz();
+        }
+        else if(time <= 0)
+        {
+            clearInterval(setTimer);
+            endQuiz();
+        }
+    }, 1000);
     currentIndex = 0;
     questionsDivEl.classList.remove("hide");   
-    timerEl.classList.remove("hide");
     showQuestion(questions[currentIndex]);   
 }
 
@@ -63,40 +77,73 @@ function showQuestion(question) {
     button4.innerHTML = question.a4.answer;
     button4.setAttribute("isCorrect", question.a4.right);
 
-    answersList.addEventListener("click", displayNext)
+    answersList.addEventListener("click", showAnswer)
+}
+
+function showAnswer(event)
+{
+    var eventEl = event;
+    var isCorrectEl = event.target.getAttribute("isCorrect");
+    if(isCorrectEl == "false")
+    {
+        event.target.classList.add("btn-red");
+    }
+    else
+    {
+        event.target.classList.add("btn-green");
+        score++;
+    }
+    setTimeout(function(){displayNext(eventEl)}, 1000);
 }
 
 function displayNext(event)
-{
+{ 
     console.log(event.target.textContent);
     console.log(event.target.getAttribute("isCorrect"));
     var isCorrectEl = event.target.getAttribute("isCorrect");
     if(isCorrectEl === "false")
     {
         time -= 10;
-        setTimer;
+        event.target.classList.remove("btn-red");
+    }
+    else
+    {
+        event.target.classList.remove("btn-green");
     }
     currentIndex++;
     if(currentIndex !== questions.length)
     {
         showQuestion(questions[currentIndex]);
-    }
-    else
-    {
-        console.log("done");
-    }   
+    }    
 }
 
-var setTimer = setInterval(function () {
-    timeNumberEl.innerHTML = time;
-    time--;
-    if(time <= 0)
-    {
-        clearInterval(setTimer);
-        questionsDivEl.classList.add("hide");
-        endDivEl.classList.remove("hide");
-        timerEl.classList.add("hide");
-    }
-}, 1000);
+function endQuiz() {
+    questionsDivEl.classList.add("hide");
+    //timerEl.classList.add("hide");
+
+    var scoreEl = document.querySelector("#score");
+    scoreEl.innerHTML = score;
+    var timeRemEl = document.querySelector("#time-left")
+    timeRemEl.innerHTML = time;
+
+    score = score * 10 + time;
+
+    var finalScoreEl = document.querySelector("#final-score");
+    finalScoreEl.innerHTML = score;
+    endDivEl.classList.remove("hide");
+
+
+    submitButtonEl = document.querySelector("#score-submit");
+    submitButtonEl.addEventListener("click", showScores);
+    
+
+    console.log("Score: ", score);
+}
+
+var showScores = function(event) {
+    event.preventDefault();
+    initials = document.querySelector("#initials").value;
+    console.log(initials);
+}
 
 startButtonEl.addEventListener("click", initQuiz);
