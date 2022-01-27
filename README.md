@@ -5,3 +5,4 @@
 # be able to see a sorted list of high scores.
 # Author: Devin Reina
 # Date: 1/27/2022
+![image](https://user-images.githubusercontent.com/32178142/151462080-81b311b5-d119-467e-add4-d3549fc3eefa.PNG)
