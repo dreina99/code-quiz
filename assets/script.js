@@ -1,4 +1,5 @@
 var startButtonEl = document.querySelector("#start-button");
+var startScreen = document.querySelector("#start-screen");
 var questionsDivEl = document.querySelector("#questions");
 var questionHeader = document.querySelector("#question-title");
 var answersList = document.querySelector("#choices");
@@ -6,6 +7,7 @@ var displayCorrectEl = document.querySelector("#display-correct")
 var timerEl = document.querySelector("#timer");
 var timeNumberEl = document.querySelector("#time-number");
 var endDivEl = document.querySelector("#end-screen");
+var highScoresDiv = document.querySelector("#high-scores")
 let score = 0;
 
 const Q1 = {
@@ -34,7 +36,7 @@ const questions = [Q1, Q2, Q3];
 let currentIndex;
 let time = 60;
 
-var initQuiz = function() {
+function initQuiz() {
     var startContent = document.querySelector("#start-screen");
     startContent.classList.add("hide");
     var setTimer = setInterval(function () {
@@ -88,7 +90,7 @@ function showAnswer(event)
     {
         event.target.classList.add("btn-red");
     }
-    else
+    else if(isCorrectEl === "true")
     {
         event.target.classList.add("btn-green");
         score++;
@@ -106,7 +108,7 @@ function displayNext(event)
         time -= 10;
         event.target.classList.remove("btn-red");
     }
-    else
+    else if(isCorrectEl === "true")
     {
         event.target.classList.remove("btn-green");
     }
@@ -132,21 +134,33 @@ function endQuiz() {
     finalScoreEl.innerHTML = score;
     endDivEl.classList.remove("hide");
 
-
     submitButtonEl = document.querySelector("#score-submit");
     submitButtonEl.addEventListener("click", showScores);
-    
-
-    console.log("Score: ", score);
 }
 
 var showScores = function(event) {
     event.preventDefault();
-    
+
     initials = document.querySelector("#initials").value;
-    console.log(initials);
-    var scoresList = document.querySelector("#scores-list");
+    
+    endDivEl.classList.add("hide");
+    highScoresDiv.classList.remove("hide")
+
+    var scoresList = document.querySelector("#high-scores-list")
     var listItemEl = document.createElement("li");
+    listItemEl.innerHTML = initials + " " + score;
+    scoresList.appendChild(listItemEl);
+
+    goBackButton = document.querySelector("#go-back");
+    goBackButton.addEventListener("click", function() {
+        highScoresDiv.classList.add("hide");
+        startScreen.classList.remove("hide");
+        time = 60;
+        score = 0;
+        timeNumberEl.innerHTML = time;
+    });
 }
 
-startButtonEl.addEventListener("click", initQuiz);
+startButtonEl.addEventListener("click", function() {
+    initQuiz();
+});
